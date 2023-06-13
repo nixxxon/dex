@@ -22,7 +22,7 @@ jobs:
       - name: Show version number
         run: echo "Version is ${{ steps.package_info.outputs.prop }}"
       - name: Set commits env
-        run: echo -e "## Changes in this release:\n\n$(git log --reverse --first-parent --merges --oneline | awk '{ print $5 }' | while read -r pr_number; do gh pr view "${pr_number:1}" --json "title,author" --template "- {{.title}} by @{{.author.login}} in $pr_number\n"; done)" > CHANGES.md
+        run: echo -e "## Changes in this release:\n\n$(git log --reverse --first-parent --merges --oneline $(git describe --tags --abbrev=0)..HEAD | awk '{ print $5 }' | while read -r pr_number; do gh pr view "${pr_number:1}" --json "title,author" --template "- {{.title}} by @{{.author.login}} in $pr_number\n"; done)" > CHANGES.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create release
