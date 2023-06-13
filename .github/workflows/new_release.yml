@@ -1,0 +1,36 @@
+name: new_release
+on:
+  push:
+    branches: [main]
+    paths: [release.json]
+jobs:
+  create_release:
+    name: Create release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Read release.json
+        uses: notiz-dev/github-action-json-property@release
+        id: package_info
+        with:
+          path: release.json
+          prop_path: version
+      - name: Show version number
+        run: echo "Version is ${{ steps.package_info.outputs.prop }}"
+      - name: Set commits env
+        run: echo -e "## Changes in this release:\n\n$(git log --reverse --first-parent --merges --oneline | awk '{ print $5 }' | while read -r pr_number; do gh pr view "${pr_number:1}" --json "title,author" --template "- {{.title}} by @{{.author.login}} in $pr_number\n"; done)" > CHANGES.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.package_info.outputs.prop }}
+          release_name: Release v${{ steps.package_info.outputs.prop }}
+          body_path: CHANGES.md
