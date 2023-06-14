@@ -6,7 +6,7 @@
 
 ## Installation
 
-1. Download the appropriate archive from the latest [release](https://github.com/nixxxon/dex/releases/latest)
+1. Download the appropriate archive from the [latest release](https://github.com/nixxxon/dex/releases/latest)
 2. Extract the `dex`-binary
 3. Make the `dex`-binary executable
 4. Add the `dex`-binary to your `$PATH`
