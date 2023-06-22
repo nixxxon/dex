@@ -11,10 +11,12 @@ import (
 	"github.com/docker/docker/client"
 )
 
+// DockerService for getting Docker containers and running commands against them
 type DockerService struct {
 	client *client.Client
 }
 
+// GetAll Docker containers
 func (s *DockerService) GetAll() ([]Container, error) {
 	var containers []Container
 
@@ -34,6 +36,7 @@ func (s *DockerService) GetAll() ([]Container, error) {
 	return containers, nil
 }
 
+// RunCommand runs a command in a Docker container
 func (s *DockerService) RunCommand(containerID string, command string) error {
 	arguments, err := splitCommand(command)
 	if err != nil {
@@ -82,6 +85,7 @@ func (s *DockerService) RunCommand(containerID string, command string) error {
 	return err
 }
 
+// Close closes the client
 func (s *DockerService) Close() {
 	s.client.Close()
 }
@@ -96,6 +100,7 @@ func splitCommand(command string) ([]string, error) {
 	return arguments, nil
 }
 
+// NewDockerService returns a new DockerService pointer
 func NewDockerService() (Service, error) {
 	dockerClient, err := client.NewClientWithOpts(
 		client.FromEnv,
