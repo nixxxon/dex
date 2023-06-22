@@ -6,8 +6,8 @@ type PromptuiService struct{}
 
 func (p *PromptuiService) DisplaySelect(
 	label string,
-	options []PromptOption,
-) (PromptOption, error) {
+	options []Option,
+) (Option, error) {
 	labels := []string{}
 	for _, option := range options {
 		labels = append(labels, option.Label)
@@ -19,7 +19,7 @@ func (p *PromptuiService) DisplaySelect(
 	}
 	i, _, err := prompt.Run()
 	if err != nil {
-		return PromptOption{}, err
+		return Option{}, err
 	}
 
 	return options[i], nil
@@ -37,6 +37,6 @@ func (p *PromptuiService) DisplayPrompt(label string) (string, error) {
 	return result, nil
 }
 
-func NewPromptuiService() PromptService {
+func NewPromptuiService() Service {
 	return &PromptuiService{}
 }

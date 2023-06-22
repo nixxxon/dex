@@ -36,7 +36,7 @@ func main() {
 
 func run(
 	containerService container.ContainerService,
-	promptService prompt.PromptService,
+	promptService prompt.Service,
 ) error {
 	containers, err := containerService.GetAll()
 	if err != nil {
@@ -74,8 +74,8 @@ func run(
 
 func containersToPromptOptions(
 	dockerContainers []container.Container,
-) []prompt.PromptOption {
-	var options []prompt.PromptOption
+) []prompt.Option {
+	var options []prompt.Option
 
 	for _, container := range dockerContainers {
 		var names []string
@@ -90,7 +90,7 @@ func containersToPromptOptions(
 			container.ID[0:12],
 		)
 
-		option := prompt.PromptOption{
+		option := prompt.Option{
 			Label: label,
 			Value: container.ID,
 		}

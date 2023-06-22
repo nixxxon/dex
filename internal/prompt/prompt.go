@@ -1,12 +1,12 @@
 package prompt
 
-type PromptOption struct {
+type Option struct {
 	Label string
 	Value string
 }
 
-//go:generate mockery --name PromptService
-type PromptService interface {
-	DisplaySelect(label string, options []PromptOption) (PromptOption, error)
+//go:generate mockery --name Service
+type Service interface {
+	DisplaySelect(label string, options []Option) (Option, error)
 	DisplayPrompt(label string) (string, error)
 }
