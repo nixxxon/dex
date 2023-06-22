@@ -1,14 +1,13 @@
 package main
 
 import (
+	"dex/internal/container"
+	"dex/internal/prompt"
 	"fmt"
 	"os"
 	"strings"
 
 	"github.com/containerd/console"
-
-	"dex/internal/container"
-	"dex/internal/prompt"
 )
 
 func main() {
@@ -35,7 +34,7 @@ func main() {
 }
 
 func run(
-	containerService container.ContainerService,
+	containerService container.Service,
 	promptService prompt.Service,
 ) error {
 	containers, err := containerService.GetAll()

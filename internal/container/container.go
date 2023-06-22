@@ -6,8 +6,8 @@ type Container struct {
 	Image string
 }
 
-//go:generate mockery --name ContainerService
-type ContainerService interface {
+//go:generate mockery --name Service
+type Service interface {
 	GetAll() ([]Container, error)
 	RunCommand(containerID, command string) error
 	Close()

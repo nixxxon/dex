@@ -96,7 +96,7 @@ func splitCommand(command string) ([]string, error) {
 	return arguments, nil
 }
 
-func NewDockerService() (ContainerService, error) {
+func NewDockerService() (Service, error) {
 	dockerClient, err := client.NewClientWithOpts(
 		client.FromEnv,
 		client.WithAPIVersionNegotiation(),

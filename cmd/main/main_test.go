@@ -17,7 +17,7 @@ import (
 func TestRun(t *testing.T) {
 	t.Run("FailsIfErrorWhenGettingContainers", func(t *testing.T) {
 		expectedError := errors.New("Mock Error")
-		mockContainerService := containermocks.NewContainerService(t)
+		mockContainerService := containermocks.NewService(t)
 		mockContainerService.On("GetAll").Return([]container.Container{}, expectedError)
 
 		mockPromptService := promptmocks.NewService(t)
@@ -28,7 +28,7 @@ func TestRun(t *testing.T) {
 	})
 
 	t.Run("FailsSilentlyIfErrorWhenDisplayingContainerSelectPrompt", func(t *testing.T) {
-		mockContainerService := containermocks.NewContainerService(t)
+		mockContainerService := containermocks.NewService(t)
 		mockContainerService.On("GetAll").Return(containersData(), nil)
 
 		mockPromptService := promptmocks.NewService(t)
@@ -42,7 +42,7 @@ func TestRun(t *testing.T) {
 	})
 
 	t.Run("FailsSilentlyIfErrorWhenDisplayingCommandPrompt", func(t *testing.T) {
-		mockContainerService := containermocks.NewContainerService(t)
+		mockContainerService := containermocks.NewService(t)
 		mockContainerService.On("GetAll").Return(containersData(), nil)
 		mockContainerService.AssertNotCalled(t, "RunCommand", mock.Anything, mock.Anything)
 
@@ -62,7 +62,7 @@ func TestRun(t *testing.T) {
 		promptOptions := promptOptionsData()
 		selectedOption := promptOptions[0]
 
-		mockContainerService := containermocks.NewContainerService(t)
+		mockContainerService := containermocks.NewService(t)
 		mockContainerService.On("GetAll").Return(containersData(), nil)
 		mockContainerService.On("RunCommand", selectedOption.Value, expectedCommand).
 			Return(nil)
@@ -83,7 +83,7 @@ func TestRun(t *testing.T) {
 		promptOptions := promptOptionsData()
 		selectedOption := promptOptions[0]
 
-		mockContainerService := containermocks.NewContainerService(t)
+		mockContainerService := containermocks.NewService(t)
 		mockContainerService.On("GetAll").Return(containersData(), nil)
 		mockContainerService.On("RunCommand", selectedOption.Value, expectedCommand).
 			Return(nil)
@@ -104,7 +104,7 @@ func TestRun(t *testing.T) {
 		promptOptions := promptOptionsData()
 		selectedOption := promptOptions[0]
 
-		mockContainerService := containermocks.NewContainerService(t)
+		mockContainerService := containermocks.NewService(t)
 		mockContainerService.On("GetAll").Return(containersData(), nil)
 		mockContainerService.On("RunCommand", selectedOption.Value, "bash").
 			Return(errors.New("Mock Error")).Once()
