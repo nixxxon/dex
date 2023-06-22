@@ -17,10 +17,10 @@ import (
 func TestRun(t *testing.T) {
 	t.Run("FailsIfErrorWhenGettingContainers", func(t *testing.T) {
 		expectedError := errors.New("Mock Error")
-		mockContainerService := containermocks.NewContainerService(t)
+		mockContainerService := containermocks.NewService(t)
 		mockContainerService.On("GetAll").Return([]container.Container{}, expectedError)
 
-		mockPromptService := promptmocks.NewPromptService(t)
+		mockPromptService := promptmocks.NewService(t)
 
 		actualError := run(mockContainerService, mockPromptService)
 
@@ -28,12 +28,12 @@ func TestRun(t *testing.T) {
 	})
 
 	t.Run("FailsSilentlyIfErrorWhenDisplayingContainerSelectPrompt", func(t *testing.T) {
-		mockContainerService := containermocks.NewContainerService(t)
+		mockContainerService := containermocks.NewService(t)
 		mockContainerService.On("GetAll").Return(containersData(), nil)
 
-		mockPromptService := promptmocks.NewPromptService(t)
+		mockPromptService := promptmocks.NewService(t)
 		mockPromptService.On("DisplaySelect", mock.Anything, promptOptionsData()).
-			Return(prompt.PromptOption{}, errors.New("Mock Error"))
+			Return(prompt.Option{}, errors.New("Mock Error"))
 		mockPromptService.AssertNotCalled(t, "DisplayPrompt", mock.Anything)
 
 		actualError := run(mockContainerService, mockPromptService)
@@ -42,13 +42,13 @@ func TestRun(t *testing.T) {
 	})
 
 	t.Run("FailsSilentlyIfErrorWhenDisplayingCommandPrompt", func(t *testing.T) {
-		mockContainerService := containermocks.NewContainerService(t)
+		mockContainerService := containermocks.NewService(t)
 		mockContainerService.On("GetAll").Return(containersData(), nil)
 		mockContainerService.AssertNotCalled(t, "RunCommand", mock.Anything, mock.Anything)
 
-		mockPromptService := promptmocks.NewPromptService(t)
+		mockPromptService := promptmocks.NewService(t)
 		mockPromptService.On("DisplaySelect", mock.Anything, promptOptionsData()).
-			Return(prompt.PromptOption{}, nil)
+			Return(prompt.Option{}, nil)
 		mockPromptService.On("DisplayPrompt", mock.Anything).
 			Return("", errors.New("Mock Error"))
 
@@ -60,16 +60,16 @@ func TestRun(t *testing.T) {
 	t.Run("NonEmptyCommandRunsSuccessfully", func(t *testing.T) {
 		expectedCommand := "ls -la"
 		promptOptions := promptOptionsData()
-		selectedPromptOption := promptOptions[0]
+		selectedOption := promptOptions[0]
 
-		mockContainerService := containermocks.NewContainerService(t)
+		mockContainerService := containermocks.NewService(t)
 		mockContainerService.On("GetAll").Return(containersData(), nil)
-		mockContainerService.On("RunCommand", selectedPromptOption.Value, expectedCommand).
+		mockContainerService.On("RunCommand", selectedOption.Value, expectedCommand).
 			Return(nil)
 
-		mockPromptService := promptmocks.NewPromptService(t)
+		mockPromptService := promptmocks.NewService(t)
 		mockPromptService.On("DisplaySelect", mock.Anything, promptOptions).
-			Return(selectedPromptOption, nil)
+			Return(selectedOption, nil)
 		mockPromptService.On("DisplayPrompt", mock.Anything).
 			Return(expectedCommand, nil)
 
@@ -81,16 +81,16 @@ func TestRun(t *testing.T) {
 	t.Run("EmptyCommandDefaultsToBash", func(t *testing.T) {
 		expectedCommand := "bash"
 		promptOptions := promptOptionsData()
-		selectedPromptOption := promptOptions[0]
+		selectedOption := promptOptions[0]
 
-		mockContainerService := containermocks.NewContainerService(t)
+		mockContainerService := containermocks.NewService(t)
 		mockContainerService.On("GetAll").Return(containersData(), nil)
-		mockContainerService.On("RunCommand", selectedPromptOption.Value, expectedCommand).
+		mockContainerService.On("RunCommand", selectedOption.Value, expectedCommand).
 			Return(nil)
 
-		mockPromptService := promptmocks.NewPromptService(t)
+		mockPromptService := promptmocks.NewService(t)
 		mockPromptService.On("DisplaySelect", mock.Anything, promptOptions).
-			Return(selectedPromptOption, nil)
+			Return(selectedOption, nil)
 		mockPromptService.On("DisplayPrompt", mock.Anything).
 			Return("", nil)
 
@@ -102,18 +102,18 @@ func TestRun(t *testing.T) {
 	t.Run("EmptyCommandAndFailedBashDefaultsToSh", func(t *testing.T) {
 		expectedCommand := "sh"
 		promptOptions := promptOptionsData()
-		selectedPromptOption := promptOptions[0]
+		selectedOption := promptOptions[0]
 
-		mockContainerService := containermocks.NewContainerService(t)
+		mockContainerService := containermocks.NewService(t)
 		mockContainerService.On("GetAll").Return(containersData(), nil)
-		mockContainerService.On("RunCommand", selectedPromptOption.Value, "bash").
+		mockContainerService.On("RunCommand", selectedOption.Value, "bash").
 			Return(errors.New("Mock Error")).Once()
-		mockContainerService.On("RunCommand", selectedPromptOption.Value, expectedCommand).
+		mockContainerService.On("RunCommand", selectedOption.Value, expectedCommand).
 			Return(nil).Once()
 
-		mockPromptService := promptmocks.NewPromptService(t)
+		mockPromptService := promptmocks.NewService(t)
 		mockPromptService.On("DisplaySelect", mock.Anything, promptOptions).
-			Return(selectedPromptOption, nil)
+			Return(selectedOption, nil)
 		mockPromptService.On("DisplayPrompt", mock.Anything).
 			Return("", nil)
 
@@ -123,8 +123,8 @@ func TestRun(t *testing.T) {
 	})
 }
 
-func promptOptionsData() []prompt.PromptOption {
-	return []prompt.PromptOption{
+func promptOptionsData() []prompt.Option {
+	return []prompt.Option{
 		{
 			Label: "[containerName1] (containerImage1) aa64bf12226b",
 			Value: "aa64bf12226bc4dff14310a8fec7d5c5f0439ed2e69b3b590c413220650c0174",

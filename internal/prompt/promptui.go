@@ -2,12 +2,14 @@ package prompt
 
 import "github.com/manifoldco/promptui"
 
+// PromptuiService for displaying prompts
 type PromptuiService struct{}
 
+// DisplaySelect displays a select prompt
 func (p *PromptuiService) DisplaySelect(
 	label string,
-	options []PromptOption,
-) (PromptOption, error) {
+	options []Option,
+) (Option, error) {
 	labels := []string{}
 	for _, option := range options {
 		labels = append(labels, option.Label)
@@ -19,12 +21,13 @@ func (p *PromptuiService) DisplaySelect(
 	}
 	i, _, err := prompt.Run()
 	if err != nil {
-		return PromptOption{}, err
+		return Option{}, err
 	}
 
 	return options[i], nil
 }
 
+// DisplayPrompt displays a normal prompt
 func (p *PromptuiService) DisplayPrompt(label string) (string, error) {
 	prompt := promptui.Prompt{
 		Label: label,
@@ -37,6 +40,7 @@ func (p *PromptuiService) DisplayPrompt(label string) (string, error) {
 	return result, nil
 }
 
-func NewPromptuiService() PromptService {
+// NewPromptuiService returns a new PromptuiService pointer
+func NewPromptuiService() Service {
 	return &PromptuiService{}
 }
