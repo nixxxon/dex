@@ -1,6 +1,7 @@
 # dex
 
-`dex` is a program for executing commands in a Docker container without knowing the id or name.
+`dex` is a program for executing commands in a running Docker container
+without knowing it's exact name or id.
 
 ![dex](https://github.com/nixxxon/dex/assets/8500894/5cf5877b-40c1-4e01-9859-07772828438c)
 
